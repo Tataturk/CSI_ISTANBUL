@@ -1,0 +1,89 @@
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.5.2.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jeditable.js/2.0.2/jquery.jeditable.min.js"></script>
+</head>
+<body>
+		<span id="connect" class="mbutton" style="display:none">[Connect]</span>
+		<input id="name" type="text" placeholder="name" class="input" autofocus>
+		<input id="password" type="password" class="input">
+	<span id="login" class="mbutton">[Login]</span>
+		<span id="logout" class="mbutton" style="display:none">[Logout]</span>
+	<span id="open" class="nbutton">[Open]</span>
+	<span id="import" class="nbutton">[Import]</span>
+	<span id="save" class="nbutton">[Save]</span>
+	<div id="json_editor" data-role="myjson"></div>
+
+</body>
+</html>
+
+
+<script src = "./nocrypto.js"></script>
+<script>
+var storageSrvr="http://localhost:10006";
+var text =
+`{
+  "name": "jane",
+  "employed": false,
+  "husband": null,
+  "items": [
+    "haro",
+    23,
+    {
+      "brand": "Duca"
+    },
+    true
+  ],
+  "pets": [
+    {
+      "name": "chopper",
+      "color": "blue"
+    },
+    {
+      "name": "yoshi",
+      "color": "green"
+    },
+    {
+      "name": "mame",
+      "color": "&#38738;&#12356;"
+    }
+  ],
+  "height": 170.4,
+  "car": {
+    "color": "red",
+    "model": "mini",
+    "clean": false
+  }
+}`;
+function xPOST(srv,verb,data) {
+  return $.ajax({
+    url: srv+'/'+verb,
+    type: "POST",
+    crossDomain: true,
+    data: data,
+    dataType: "json",
+    success: function (response) {
+    }
+  })
+  .fail(function(xhr) {
+    alert("error");
+  })
+}
+$(function(){
+  $('#save').click(function(){
+    xPOST(storageSrvr,'save',{
+      text:text
+    })
+    .done((data)=>  {
+      console.log(data)
+    });
+  })
+  $('#import').click(function(){
+
+    xPOST(storageSrvr,'give',{
+
+    }).then((data)=> {
+       var test =JSON.stringify(data);
+       alert(test);
+    });
+  })
+})
+</script>
