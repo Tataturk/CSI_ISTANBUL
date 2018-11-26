@@ -59,9 +59,29 @@ var today = new Date();
 			if (n<traceval) console.log('***',msg)
 		},
 		traceIP: (n,msg,ip,country) => {
-			if (n<traceval) console.log('***',msg,'IP: ',ip)
-			var log = (msg,' requested by: ',ip,' from ',country)
-			console.log(msg,' requested by: ',ip,' from ',country)
+			if (n<traceval) console.log('***',msg,'IP:',ip,'from',country)
+			var log = (msg+' requested by: '+ip+' from '+country)
+			notesto.logService(log);
+			
+		},
+		getDate: () =>	{
+			var today = new Date();
+			var day = today.getDate();
+			var month = today.getMonth();
+			var year = today.getFullYear();
+			today = day + "-" + month + "-" + year;
+			return today;
+		},
+		getTime: () => {
+			var time = new Date();
+			time = "["+time.getHours()+":"+time.getMinutes()+":"+time.getSeconds()+"]";
+			return time;
+		},
+		logService: (msg) => {
+			//create log folder
+			fs.mkdir(__dirname+'/logs',(err) => {});
+			var stream = fs.createWriteStream(__dirname+'/logs/'+notesto.getDate(),{flags:'a'});
+			stream.write(notesto.getTime()+" "+msg+"\n");
 		}
 
 	}))()
