@@ -23,7 +23,7 @@ var today = new Date();
 			}).catch(x=>{throw(Error('notesto.POST('+url+bdy+') resulted in '+x))})
 			.then(x => { if (/\*\*ERROR\*\*/.test(x)) {
 							throw(Error('notesto.POST('+url+bdy+') resulted in '+x)); } return x; })},
-		xPOSTtxt: (url,bdy) => {
+		xPOSTtxt: (url,bdy) => {l
 			return rp({ method:'POST',
 				uri:'http://'+url,
 				body:bdy,
@@ -94,7 +94,8 @@ var today = new Date();
 			fs.mkdir(__dirname+'/logs',(err) => {});
 			var stream = fs.createWriteStream(__dirname+'/logs/'+notesto.getDate()+'.log',{flags:'a'});
 			stream.write(notesto.getTime()+" "+msg+"\n");
-		}
+		},
+
 
 	}))()
 

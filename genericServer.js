@@ -123,6 +123,8 @@ mkObject$ = (obj) => {
 									$.PARAM = request.query;
 									$.PATH = request.params;
 									$.REQUEST = request;
+									const ip = request.info.remoteAddress;
+									console.log(ip);
 									return v($) || 'null';
 								}
 							}
