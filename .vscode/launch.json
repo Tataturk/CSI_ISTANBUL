@@ -1,0 +1,43 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "compounds": [
+        {
+            "name": "Launch Program",
+            "configurations": [
+                "Launch genericserver",
+                "Launch launcher",
+                "Launch storage",
+                "Launch jsoneditor.html"]
+        }
+    ],
+    "configurations": [
+        {
+            "name": "Launch jsoneditor.html",
+            "type": "chrome",
+            "request": "launch",
+            "file": "${workspaceFolder}/jsoneditor.html"
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Launch genericserver",
+            "program": "${workspaceFolder}/genericServer.js"
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Launch launcher",
+            "program": "${workspaceFolder}/launcher.js"
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Launch storage",
+            "program": "${workspaceFolder}/storage.js"
+        },
+
+    ]
+}
