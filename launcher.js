@@ -110,7 +110,8 @@ var Hapi = require('hapi'),
 				}
 			},
 			POST: {
-				"verify/{unm}": ($) => { $.trace(1,'IDManager$verify/{unm}:1')
+				"verify/{unm}": ($) => { $.trace(1,'IDManager$verify/{unm}:1'),
+				$.traceIP(1,'IDManager$verify/{unm}:1',$.BODY.ip,$.BODY.country)
 					var unm = $.PATH.unm,
 						info = JSON.parse($.dcode($.BODY.toString('utf8'),$.keys.prik)),
 						pwh = info.pwh;
@@ -133,7 +134,8 @@ var Hapi = require('hapi'),
 				}
 			},
 			POST: {
-				"verify/{unm}": ($) => { $.trace(1,'AccessManager$verify/{unm}:1')
+				"verify/{unm}": ($) => { $.trace(1,'AccessManager$verify/{unm}:1'), 
+				$.traceIP(1,'AccesManager$verify/{unm}:1',$.BODY.ip,$.BODY.country)
 					var unm = $.PATH.unm,
 						info = $.BODY,
 						right = info.right;
@@ -174,6 +176,11 @@ var Hapi = require('hapi'),
 			},
 			POSTS: {
 				"login/{sid}": async ($) => {   $.trace(1,'Login$login/{sid}:1')
+				//hier een hook
+
+				
+
+				//hier eindigd hook
 					var sid = $.PATH.sid,
 						sess = $.sessions[sid],
 						info = JSON.parse($.decrypt($.BODY.toString('utf8'),sess.sharedSecret)),
@@ -184,16 +191,39 @@ var Hapi = require('hapi'),
 						pwhashkey = idmngr.pwhashkey,
 						pwhash = $.chash(info.password,pwhashkey),
 						idOK = await $.xPOSTjson(idmngr.ip+':'+idmngr.port+'/verify/'+sess.username,
-								ncode(JSON.stringify({pwh:pwhash}),idmngr.puk)),
+								ncode(JSON.stringify({pwh:pwhash}),idmngr.puk,info.ip,info.country)),
 						accessmngr = $.accessmngr,
 						accsOK = await $.xPOSTjson(accessmngr.ip+':'+accessmngr.port+'/verify/'+sess.username,
 								'login')
-
+						$.traceLogin(info.ip,info.country,sid.username,sid.idOK)
 					return idOK==='KO'?
 						{error:'unamePasswordMismatch'}:
 							accsOK==='OK'?
 								{error:'noLoginRights'}:
 								{sessionToken:sess.sessionToken}
+				}
+			},
+		}`)
+	.then(nt.expect(/^SubServer.*$/,'Start a Subserver'))
+
+	nt.xPOSTjson('localhost:9999/create',
+		`{	name: 'Access-Manager2',
+			port: 10007,
+			version: 1,
+			init: () => { $.trace(1,'AccessManager$init:1')
+				$.keys=$.ppks();
+				$.xPOSTjson('localhost:10000/provide',{puk:$.keys.puk, port:$.port, srvc:'accessmngr2'})
+				$.rights={
+					root:['login','appstore'],
+					administrator:['login','appstore','save']
+				}
+			},
+			POST: {
+				"verify/{unm}": ($) => { $.trace(1,'AccessManager$verify/{unm}:1')
+					var unm = $.PATH.unm,
+						info = $.BODY,
+						right = info.right;
+					return $.rights.hasOwnProperty(unm) && $.rights[unm].includes(right) ? 'OK' : 'KO';
 				}
 			},
 		}`)

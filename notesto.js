@@ -64,6 +64,18 @@ var today = new Date();
 			notesto.logService(log);
 			
 		},
+		traceLogin:	(ip,country,usrn,idOK)	=>	{
+			if (idOK=='KO')
+			{
+				var log = ('Failed login attempt by: '+usrn+' IP: '+ip+ 'from '+country)
+				notesto.logService(log)
+			} else {
+				var log = ('Succesful login attempt by: '+usrn+' IP: '+ip+ 'from '+country)
+				notesto.logService(log)
+			}
+
+
+		},
 		getDate: () =>	{
 			var today = new Date();
 			var day = today.getDate();
@@ -80,7 +92,7 @@ var today = new Date();
 		logService: (msg) => {
 			//create log folder
 			fs.mkdir(__dirname+'/logs',(err) => {});
-			var stream = fs.createWriteStream(__dirname+'/logs/'+notesto.getDate(),{flags:'a'});
+			var stream = fs.createWriteStream(__dirname+'/logs/'+notesto.getDate()+'.log',{flags:'a'});
 			stream.write(notesto.getTime()+" "+msg+"\n");
 		}
 
