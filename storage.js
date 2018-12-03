@@ -13,7 +13,7 @@ var Hapi = require('hapi'),
 		port: 10006,
 		version: 1,
 		init: () => { $.trace(1,'storage$init:1')
-			$.xPOSTjson('localhost:10000/provide',{port:$.port, srvc:'storage'});
+			$.xPOSTjson('localhost:10000/provide',{port:$.port, srvc:'storage'})
 		},
 
 		POST:	{
