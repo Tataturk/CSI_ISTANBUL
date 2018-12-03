@@ -1,3 +1,8 @@
+# npm install hapi
+# npm install request
+# npm install request-promise
+# npm install fs
+
 # Cybersecurity Services Infrastructure (CSI)
 
 CSI is a distributed (service-oriented) infrastructure ***intended solely for 
