@@ -1,6 +1,9 @@
-npm install hapi
+npm install hapi 
+
 npm install request
+
 npm install request-promise
+
 npm install fs
 
 # Cybersecurity Services Infrastructure (CSI)
