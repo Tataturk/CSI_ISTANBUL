@@ -62,6 +62,7 @@ var today = new Date();
 			if (n<traceval) console.log('***',msg,'IP:',ip,'from',country)
 			var log = (msg+' requested by: '+ip+' from '+country)
 			notesto.logService(log);
+			return notesto.ipValidation(msg,ip)
 			
 		},
 		traceLogin:	(ip,country,usrn,idOK)	=>	{
@@ -81,7 +82,7 @@ var today = new Date();
 			var day = today.getDate();
 			var month = today.getMonth();
 			var year = today.getFullYear();
-			today = day + "-" + month + "-" + year;
+			today = day + "-" + (month+1) + "-" + year;
 			return today;
 		},
 		getTime: () => {
@@ -95,7 +96,32 @@ var today = new Date();
 			var stream = fs.createWriteStream(__dirname+'/logs/'+notesto.getDate()+'.log',{flags:'a'});
 			stream.write(notesto.getTime()+" "+msg+"\n");
 		},
-
+		ipValidation: (msg,ip) =>	{
+			//proof of concept
+			var access = false;
+			fs.readFile(__dirname+'/testJson.json', (err, data) =>	{
+				var json = JSON.parse(data)
+				currentDate = "4-12-2018"
+				ip = "123.456.789.000"
+				//console.log(JSON.stringify(json.date[currentDate][ip].service))
+				var obj = json.date[currentDate][ip].service
+				obj.push(msg)
+				//console.log(JSON.stringify(obj))
+				var count = 0;
+				//check requests
+				for (let index = 0; index < obj.length; index++) {
+					if (obj[index]==msg) count++
+				}
+				//allow access
+				if (msg=="Login$keyExchange:1" && count<10) access = true;
+				else if (msg!="Login$keyExchange:1" && count<100) access = true;
+				//console.log(count+" "+access)				
+				fs.writeFile(__dirname+'/logs/'+'serviceAccess.json', JSON.stringify(json), function(err){
+					if (err) throw err;
+				});
+			})
+			return access;
+		},
 
 	}))()
 
