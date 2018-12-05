@@ -38,6 +38,12 @@
             "name": "Launch storage",
             "program": "${workspaceFolder}/storage.js"
         },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Launch test",
+            "program": "${workspaceFolder}/testScript.js"
+        },
 
     ]
 }
